@@ -38,10 +38,20 @@ def print_result(subdomains: list, domain: str):
     for subdomain in subdomains:
         print(f'{subdomain}.{domain}')
 
-def main(domain: str, api_key: str):
+def save_subdomains_to_file(output_file: str, subdomains: list, domain: str):
+    if output_file is None or len(subdomains) == 0:
+        return
+
+    with open(str(output_file), 'w') as file:
+        for subdomain in subdomains:
+            file.write(subdomain + '.' + domain + '\n')
+    print(f'\n[*] Results saved in {output_file} file')
+
+def main(domain: str, api_key: str, output_file: str):
     subdomains = search_subdomains(domain, api_key)
     print_result(subdomains, domain)
+    save_subdomains_to_file(output_file, subdomains, domain)
 
 if __name__ == '__main__':
     args = cli.parser.parse_args()
-    main(args.domain, args.api_key)
+    main(args.domain, args.api_key, args.output_file)
